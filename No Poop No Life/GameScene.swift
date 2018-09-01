@@ -61,10 +61,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //
     var backGround : SKSpriteNode?
     var light : SKLightNode?
+    //lights
+    var lightTop : SKLightNode?
+    var lightBot : SKLightNode?
+    var lightLeft : SKLightNode?
+    
     
     //check whether it is user's first tap of the game
     var tutorStage : Int = 3
     var poop : SKSpriteNode?
+    var tutorial : Bool = true
     
     var diverTexture : SKSpriteNode?
 
@@ -107,8 +113,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //tutorial
     var tapIcon : SKSpriteNode?
     var tapText : SKLabelNode?
-    var tapText2 : SKLabelNode?
-    var tapIcon2 : SKSpriteNode?
     
     //lightBox blind dodge double points
     var points : Int = 2
@@ -206,6 +210,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         //        sharkBot?.shadowCastBitMask = 0
         //        sharkBot?.shadowedBitMask = 1
         
+        //lights
+        lightTop = troll?.childNode(withName: "lightTop") as? SKLightNode
+        lightBot = troll?.childNode(withName: "lightBot") as? SKLightNode
+        lightLeft = troll?.childNode(withName: "lightLeft") as? SKLightNode
+        lightEnable(enable: false)
         
         
         
@@ -234,12 +243,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         //botBiteDown = SKAction.moveBy(x: 0, y: -60 , duration: 0.01)
         
         //gravity
-        let gravity = SKFieldNode.linearGravityField(withVector: vector3(0, -5.8, 0))
+        let gravity = SKFieldNode.linearGravityField(withVector: vector3(0, -8.8, 0))
         //gravity.strength = 6
         gravity.categoryBitMask = gravityCategory
         addChild(gravity)
         
-        let reverseGravity = SKFieldNode.linearGravityField(withVector: vector3(0, 5.8, 0))
+        let reverseGravity = SKFieldNode.linearGravityField(withVector: vector3(0, 8.8, 0))
         //reverseGravity.strength = -6
         reverseGravity.categoryBitMask = reverseGravityCategory
         addChild(reverseGravity)
@@ -274,19 +283,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         
         scoreBoard?.text = String(score)
         
-        //        light = childNode(withName: "light") as? SKLightNode
-        //        light?.categoryBitMask = 1
-        //        let light2 = childNode(withName: "light2") as? SKLightNode
-        //        light2?.categoryBitMask = 0x1 << 2
-        //
-        //        let light3 = childNode(withName: "light3") as? SKLightNode
-        //        light3?.categoryBitMask = 0x1 << 3
+        
         
         //light?.falloff = -4
         //restartButton?.restartButtonDelegate = self
         //restartButton?.isUserInteractionEnabled = true
         
-        createAJelly(right: false, tutorial: true)
+        createAJelly(right: true, tutorial: true)
         
         //find the note for diver texture
         //diverTexture = troll?.childNode(withName: "diver") as? SKSpriteNode
@@ -296,9 +299,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         
         //tuturoial
         tapIcon = childNode(withName: "tapIcon") as? SKSpriteNode
-        tapIcon2 = childNode(withName: "tapIcon2") as? SKSpriteNode
         tapText = childNode(withName: "tapText") as? SKLabelNode
-        tapText2 = childNode(withName: "tapText2") as? SKLabelNode
         
         lightBox = troll?.childNode(withName: "lightBox") as? SKSpriteNode
         lightBox?.color = UIColor.clear
@@ -315,27 +316,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         ring?.alpha = 0
     }
     
-    
+    //create jellyfishes for the rest of the game after tutorial
     func beginCreateJelly() {
+        var tutorIn = true
         var time : Double = 4
-        poopTimer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { (timer) in
+        poopTimer = Timer.scheduledTimer(withTimeInterval: 3.6, repeats: true, block: { (timer) in
             if arc4random_uniform(2) == 1 {
-                time = 0.2
+                time = 0.1
             } else {
-                time = 0.6
+                time = 0.4
             }
+//            if tutorIn == true {
+//                time = 3.3
+//                //set tutorial = false only after left side tutor jelly fish created
+//                tutorIn = false
+//            }
+            print(time)
             self.poopDelay = Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { (timer) in
-                if arc4random_uniform(2) == 1 {
+                if tutorIn == true {
                     self.createAJelly(right: false, tutorial: false)
+                    tutorIn = false
                 } else {
-                    self.createAJelly(right: true, tutorial: false)
+                    if arc4random_uniform(2) == 1 {
+                        self.createAJelly(right: false, tutorial: false)
+                    } else {
+                        self.createAJelly(right: true, tutorial: false)
+                    }
                 }
                 
             })
         })
     }
-    
-    
+
+    func lightEnable(enable : Bool) {
+        lightTop?.isEnabled = enable
+        lightBot?.isEnabled = enable
+        lightLeft?.isEnabled = enable
+    }
     func createAJelly(right : Bool, tutorial : Bool) {
         points = 2
         poop = SKSpriteNode(imageNamed: "Jellyfish4")
@@ -361,7 +378,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
             let poopY = rightYmin  + CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
             if tutorial == true {
                 poop?.position = CGPoint(x: (size.width / 2) + (poop?.size.width)!, y: poopY)
-                let moveToLeft = SKAction.moveBy(x: -(size.width / 2.5), y: 0, duration: 1.5)
+                let moveToLeft = SKAction.moveBy(x: -(size.width / 3.2), y: 0, duration: 1.5)
                 poop?.run(moveToLeft)
             } else {
                 poop?.position = CGPoint(x: (size.width / 2) + ((poop?.size.width)! / 2), y: poopY)
@@ -377,8 +394,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
             let poopY = -rightYmin - CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
             poop?.position = CGPoint(x: (-size.width / 2) - ((poop?.size.width)! / 2), y: poopY)
             if tutorial == true {
-                let moveToRight = SKAction.moveTo(x: -(size.width / 2) + size.width / 6.5, duration: 1)
-                poop?.run(moveToRight)
+                let pause = SKAction.wait(forDuration: 3.3)
+                //let moveToRight = SKAction.moveTo(x: -(size.width / 2) + size.width / 6.5, duration: 1)
+                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 3)
+                poop?.run(SKAction.sequence([pause, moveToRight, SKAction.removeFromParent()]))
             } else {
                 let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 3)
                 poop?.run(SKAction.sequence([moveToRight, SKAction.removeFromParent()]))
@@ -386,27 +405,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         }
     }
 
-        func didBegin(_ contact: SKPhysicsContact) {
-            if gameOver == false {
-                //have to set boundingrectangle in gamescene to enable contact , need physcialBody of both parties!
-                if contact.bodyA.node?.name == "leftContact" || contact.bodyB.node?.name == "leftContact" || contact.bodyA.node?.name == "rightContact" || contact.bodyB.node?.name == "rightContact" {
-                    score += points
-                    playSound(soundURL: dingSound!)
-                    scoreBoard?.text = String(score)
-                } //when game over triggers
-                else if contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "troll" || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "poop" {
-                    
-                    gameIsOver(bitten : false)
+    func didBegin(_ contact: SKPhysicsContact) {
+        if gameOver == false {
+            //have to set boundingrectangle in gamescene to enable contact , need physcialBody of both parties!
+            if contact.bodyA.node?.name == "leftContact" || contact.bodyB.node?.name == "leftContact" || contact.bodyA.node?.name == "rightContact" || contact.bodyB.node?.name == "rightContact" {
+                score += points
+                playSound(soundURL: dingSound!)
+                scoreBoard?.text = String(score)
+            } //when game over triggers
+            else if contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "troll" || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "poop" {
+                
+                gameIsOver(bitten : false)
 
-  
-                }
-                else if contact.bodyA.node?.name == "midContact" && contact.bodyB.node?.name == "topBite" || contact.bodyA.node?.name == "topBite" && contact.bodyB.node?.name == "midContact"{
-                    gameIsOver(bitten: true)
-                }
-        
+
             }
-
+            else if contact.bodyA.node?.name == "midContact" && contact.bodyB.node?.name == "topBite" || contact.bodyA.node?.name == "topBite" && contact.bodyB.node?.name == "midContact"{
+                gameIsOver(bitten: true)
+            }
+    
         }
+
+    }
+    
+    func didEnd(_ contact: SKPhysicsContact) {
+        if contact.bodyA.node?.name == "rightContact" || contact.bodyB.node?.name == "rightContact" {
+            lightEnable(enable: true)
+        }
+    }
     
     func gameIsOver(bitten : Bool) {
         if score > best {
@@ -471,54 +496,69 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // 0 is in game tap, 1 is the last tap to get out tutortial 2 is after tap restart, 3,4 is tutorial
         if gameOver == false {
-            if tutorStage == 0 {
-                troll?.run(rotateCounterClock!)
-                playSound(soundURL: diverSound!)
-                if (lightBox?.intersects(poop!))! {
-                    points = 1
-                }
-            } else if tutorStage == 1 {
-                tapText?.removeFromParent()
-                troll?.run(rotateCounterClock!)
-                playSound(soundURL: diverSound!)
-                troll?.physicsBody?.applyAngularImpulse(-2.5)
-                poop?.run(SKAction.sequence([SKAction.moveBy(x: size.width, y: 0, duration: 3), SKAction.removeFromParent()]))
-                beginCreateJelly()
-                tutorStage = 0
-                
-            } else if tutorStage == 2 {
+            if tutorial == true {
                 troll?.run(rotateCounterClock!)
                 playSound(soundURL: diverSound!)
                 troll?.physicsBody?.applyAngularImpulse(-2.5)
                 poop?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3), SKAction.removeFromParent()]))
                 beginCreateJelly()
-                tutorStage = 0
+                tutorial = false
                 points = 1
-            } else if tutorStage == 3 {
-                tutorStage = 4
-                tapText?.fontColor = UIColor(red: 1, green: 50/255, blue: 139/255, alpha: 1)
-                tapText?.text = "one side is covered in dark, tap to rotate to light this side up"
-                tapText?.fontSize = 72
-                tapText2?.removeFromParent()
                 tapIcon?.removeFromParent()
-                tapIcon2?.removeFromParent()
+                tapText?.removeFromParent()
             } else {
-                troll?.physicsBody?.angularVelocity = -0.4
                 troll?.run(rotateCounterClock!)
                 playSound(soundURL: diverSound!)
-                //print(troll?.physicsBody?.angularVelocity)
-                print("onemoretap false")
-                print("\(troll?.zRotation), \(CGFloat.pi)")
-                if (troll?.zRotation)! >= 2.1{
-                    print("greater than pi")
-                    troll?.physicsBody?.angularVelocity = 0
-                    troll?.zRotation = 2.1
-                    tapText?.fontColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-                    tapText?.text = "dodge jellyfish and don't get bit by shark, tap to start"
-                    tutorStage = 1
+                if (lightBox?.intersects(poop!))! {
                     points = 1
                 }
             }
+//            if tutorStage == 0 {
+//                troll?.run(rotateCounterClock!)
+//                playSound(soundURL: diverSound!)
+//                if (lightBox?.intersects(poop!))! {
+//                    points = 1
+//                }
+//            } else if tutorStage == 1 {
+//                tapText?.removeFromParent()
+//                troll?.run(rotateCounterClock!)
+//                playSound(soundURL: diverSound!)
+//                troll?.physicsBody?.applyAngularImpulse(-2.5)
+//                poop?.run(SKAction.sequence([SKAction.moveBy(x: size.width, y: 0, duration: 3), SKAction.removeFromParent()]))
+//                beginCreateJelly()
+//                tutorStage = 0
+//
+//            } else if tutorStage == 2 {
+//                troll?.run(rotateCounterClock!)
+//                playSound(soundURL: diverSound!)
+//                troll?.physicsBody?.applyAngularImpulse(-2.5)
+//                poop?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3), SKAction.removeFromParent()]))
+//                beginCreateJelly()
+//                tutorStage = 0
+//                points = 1
+//            } else if tutorStage == 3 {
+//                tutorStage = 4
+//                tapText?.fontColor = UIColor(red: 1, green: 50/255, blue: 139/255, alpha: 1)
+//                tapText?.text = "one side is covered in dark, tap to rotate to light this side up"
+//                tapText?.fontSize = 72
+//                tapIcon?.removeFromParent()
+//            } else {
+//                troll?.physicsBody?.angularVelocity = -0.4
+//                troll?.run(rotateCounterClock!)
+//                playSound(soundURL: diverSound!)
+//                //print(troll?.physicsBody?.angularVelocity)
+//                print("onemoretap false")
+//                print("\(troll?.zRotation), \(CGFloat.pi)")
+//                if (troll?.zRotation)! >= 2.1{
+//                    print("greater than pi")
+//                    troll?.physicsBody?.angularVelocity = 0
+//                    troll?.zRotation = 2.1
+//                    tapText?.fontColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+//                    tapText?.text = "dodge jellyfish and don't get bit by shark, tap to start"
+//                    tutorStage = 1
+//                    points = 1
+//                }
+//            }
         } else {
             print("gameover Touch")
             if let touch = touches.first {
@@ -567,6 +607,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         score = 0
         scoreBoard?.text = String(score)
         troll?.zRotation = 0
+        troll?.physicsBody?.angularVelocity = 0
         //diverTexture?.texture = diverTexture1
         topBite?.position.y = 383.169
         botBite?.position.y = -383.169
@@ -574,7 +615,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         opacityZero()
         //gameBoard?.run(SKAction.moveTo(y: (troll?.position.y)! + size.height, duration: 1))
         createAJelly(right: true, tutorial: true)
-        tutorStage = 2
+        tutorial = true
+        lightEnable(enable: false)
         print("restarted")
         //restartButton?.isUserInteractionEnabled = false
     }
