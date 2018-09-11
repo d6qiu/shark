@@ -48,7 +48,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //timers
     var poopTimer : Timer?
     var poopDelay : Timer?
-    
+    var fireImme : Bool = false
     //scorer
     var leftContact : SKSpriteNode?
     var rightContact : SKSpriteNode?
@@ -67,10 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     var lightLeft : SKLightNode?
     
     
-    //check whether it is user's first tap of the game
-    var tutorStage : Int = 3
     var poop : SKSpriteNode?
-    var tutorial : Bool = true
     
     var diverTexture : SKSpriteNode?
 
@@ -113,25 +110,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //tutorial
     var tapIcon : SKSpriteNode?
     var tapText : SKLabelNode?
-    
+    var tutorial : Bool = true
+    var rightJellyPassed : Bool = false
+    var leftJellyPassed : Bool = false
     //lightBox blind dodge double points
     var points : Int = 2
     var lightBox : SKSpriteNode?
     
-    //slowmotion jelly
-    var slowedBefore : Bool = false
+    //determines when to turn lights on and off
+    var lightsOnValue : Int = 0
+    var stillTutor : Bool = true
     
     //after first jelly touch left edge, start beginJelly
     var firstJellyPassed : Bool = false
     
+    
     override func didMove(to view: SKView) {
-        UIScreen.main.brightness = 50
+        UIScreen.main.brightness = 0.66
         physicsWorld.contactDelegate = self
         setUpGame()
+        positionArray = [topBite?.position, botBite?.position, leftEdge?.position, rightEdge?.position] as? [CGPoint]
     }
     //right texture
     let ringsArray : [SKTexture] = [SKTexture(imageNamed: "Saphire1"), SKTexture(imageNamed: "Ruby1"),SKTexture(imageNamed: "Gold1"),SKTexture(imageNamed: "Silver1"),SKTexture(imageNamed: "Bronze1")]
+    let ringsNameArray : [String] = ["Sapphire", "Ruby", "Gold", "Silver", "Bronze"]
     var ring : SKSpriteNode?
+    
+    //saved position array
+    var positionArray : [CGPoint]?
+    
     func setUpGame() {
         //scuba diver animation setup
         animation = SKAction.animate(with: [diverTexture2, diverTexture1], timePerFrame: 0.1)
@@ -243,7 +250,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         botEdge?.physicsBody?.categoryBitMask = edgeCategory
         
         //actions
-        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 2.2, duration: 0.06)
+        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 2.3, duration: 0.06)
         //topBiteUp = SKAction.moveTo(y: (troll?.position.y)!, duration: 0.01)
         //botBiteDown = SKAction.moveTo(y: (botBite?.position.y)!, duration: 0.01)
         //topBiteUp = SKAction.moveBy(x: 0, y: 60 , duration: 0.01)
@@ -314,7 +321,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         print("\(troll?.zRotation), \(CGFloat.pi)")
         
         initJelly()
-        createAJelly(right: true, tutorial: true)
+        //createAJelly(right: true, tutorial: true)
     }
     
     func initJelly() {
@@ -353,9 +360,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     
     //create jellyfishes for the rest of the game after tutorial
     func beginCreateJelly() {
-        //var tutorIn = true
         var time : Double = 4
-        poopTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
+        poopTimer = Timer.scheduledTimer(withTimeInterval: 2.7, repeats: true, block: { (timer) in
+            
             if arc4random_uniform(2) == 1 {
                 time = 0.1
             } else {
@@ -372,21 +379,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //                    self.createAJelly(right: false, tutorial: false)
 //                    tutorIn = false
 //                } else {
+//                if self.leftJellyPassed && self.rightJellyPassed {
+//                    self.lightEnable(enable: true)
+//                }
                     if arc4random_uniform(2) == 1 {
-                        DispatchQueue.main.async {
+                        //DispatchQueue.main.async {
                             self.createAJelly(right: false, tutorial: false)
-                        }
+                            self.leftJellyPassed = true
+                        //}
                         //self.createAJelly(right: false, tutorial: false)
                     } else {
-                        DispatchQueue.main.async {
+                        //DispatchQueue.main.async {
                             self.createAJelly(right: true, tutorial: false)
-                        }
+                            self.rightJellyPassed = true
+                        //}
                         //self.createAJelly(right: true, tutorial: false)
                     }
                 //}
                 
             })
         })
+        //if not tutoring fire immediately, else wait 2.6 sec
+        if fireImme == true {
+            poopTimer?.fire()
+        } else {
+            fireImme = true
+        }
     }
 
     func lightEnable(enable : Bool) {
@@ -484,14 +502,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //        poop?.lightingBitMask = 1
 //        poop?.shadowCastBitMask = 0
 //        poop?.shadowedBitMask = 1
-        let rightYmax = (troll?.size.height)! / 2 //- poop.size.height
-        let rightYmin = (troll?.size.width)! + (poop?.size.height)!
+        //let rightYmax = (troll?.size.height)! / 2.2 //- poop.size.height
+        //let rightYmin = (troll?.size.width)! +  1.3 * (poop?.size.height)!
+        let jellyDistance = (troll?.size.height)! / 2 - (poop?.size.height)! / 2.5
         points = 2
         if right == true {
             //animation
             //poop?.run(SKAction.repeatForever(jellyAnimation))
             //unint 32 has to be unsigned otherwise error
-            let poopY = rightYmin  + CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
+            poop?.zRotation = 0
+            //let poopY = rightYmin  + CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
+            let poopY = jellyDistance
             if tutorial == true {
                 poop?.position = CGPoint(x: (size.width / 2) + (poop?.size.width)!, y: poopY)
                 let moveToLeft = SKAction.moveBy(x: -(size.width / 3.2), y: 0, duration: 1.5)
@@ -499,7 +520,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 
             } else {
                 poop?.position = CGPoint(x: (size.width / 2) + ((poop?.size.width)! / 2), y: poopY)
-                let moveToLeft = SKAction.moveBy(x: -size.width, y: 0, duration: 2.6)
+                let moveToLeft = SKAction.moveBy(x: -size.width, y: 0, duration: 2.7)
                 //let moveToLeft = SKAction.applyForce(CGVector(dx: -151, dy: 0), duration: 3)
                 //let moveToLeft = SKAction.wait(forDuration: 3)
                 poop?.run(SKAction.sequence([moveToLeft]))
@@ -507,28 +528,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 
                 //print(size.width/3) velocity is 455
             }
+            if lightTop?.isEnabled == false {
+                lightsOnValue += 1
+            } else { //dark & right
+                lightsOnValue -= 1
+            }
 
         } else {
             //poop?.run(SKAction.repeatForever(jellyAnimation))
-            DispatchQueue.main.async {
+            //DispatchQueue.main.async {
                 self.poop?.zRotation = CGFloat.pi
-            }
+            //}
             //poop?.zRotation = CGFloat.pi
             //unint 32 has to be unsigned otherwise error
-            let poopY = -rightYmin - CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
+            //let poopY = -rightYmin - CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
+            let poopY = -jellyDistance
             poop?.position = CGPoint(x: (-size.width / 2) - ((poop?.size.width)! / 2), y: poopY)
             //poop?.position = CGPoint(x: -1500, y: 1000)
-            if tutorial == true {
-                let pause = SKAction.wait(forDuration: 3.3)
-                //let moveToRight = SKAction.moveTo(x: -(size.width / 2) + size.width / 6.5, duration: 1)
-                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 2.6)
-                poop?.run(SKAction.sequence([pause, moveToRight]))
-            } else {
-                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 2.6)
+//            if tutorial == true {
+//                let pause = SKAction.wait(forDuration: 3.3)
+//                //let moveToRight = SKAction.moveTo(x: -(size.width / 2) + size.width / 6.5, duration: 1)
+//                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 2.6)
+//                poop?.run(SKAction.sequence([pause, moveToRight]))
+//            } else {
+                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 2.7)
                 //let moveToRight = SKAction.applyForce(CGVector(dx: 151, dy: 0), duration: 3)
                 //let moveToRight = SKAction.wait(forDuration: 3)
                 //poop?.physicsBody?.velocity = CGVector(dx: size.width/3, dy: 0)
-                poop?.run(SKAction.sequence([moveToRight]))
+                //poop?.run(SKAction.sequence([moveToRight]))
+                poop?.run(moveToRight)
+            //}
+            //left -1
+            if lightTop?.isEnabled == false {
+                lightsOnValue -= 1
+            } else { // dark & left
+                lightsOnValue += 1
             }
         }
     }
@@ -537,30 +571,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         if gameOver == false {
             //have to set boundingrectangle in gamescene to enable contact , need physcialBody of both parties!
             if contact.bodyA.node?.name == "leftContact" || contact.bodyB.node?.name == "leftContact" || contact.bodyA.node?.name == "rightContact" || contact.bodyB.node?.name == "rightContact" {
+                DispatchQueue.global(qos: .background).async {
+                    self.playSound(soundURL: self.dingSound!)
+                }
                 score += points
-                playSound(soundURL: dingSound!)
                 scoreBoard?.text = String(score)
+                print("lights on value : \(lightsOnValue)")
+                if stillTutor == false { //dark and
+                    if lightsOnValue == 0 && lightTop?.isEnabled == true {
+                        lightEnable(enable: false)
+                        lightsOnValue = 0
+                        //bright, two same side in a row, turn into dark
+                    } else if lightsOnValue == 2 && lightTop?.isEnabled == false{
+                        lightEnable(enable: true)
+                        lightsOnValue = 0
+                    }
+                }
+                else if leftJellyPassed == true && rightJellyPassed == true && stillTutor == true{
+                    lightEnable(enable: true)
+                    stillTutor = false
+                    lightsOnValue = 0
+                }
             } //when game over triggers
             else if contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "troll" || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "poop" {
+                let rotation = poop?.zRotation
+                poop?.speed = 0
+                //DispatchQueue.main.async {
+                    //self.poop?.zRotation = rotation!
+                    //self.isUserInteractionEnabled = false
+                    self.gameIsOver(bitten : false)
+                    //self.isUserInteractionEnabled = true
+//                     }
+            
                 
-                gameIsOver(bitten : false)
             }
             else if contact.bodyA.node?.name == "midContact" && contact.bodyB.node?.name == "topBite" || contact.bodyA.node?.name == "topBite" && contact.bodyB.node?.name == "midContact"{
+                poop?.speed = 0
                 gameIsOver(bitten: true)
             }
-            else if contact.bodyA.node?.name == "leftEdge" && contact.bodyB.node?.name == "poop" ||
-                contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "leftEdge" {
-                if firstJellyPassed == false {
-                    print("first removed")
-                    //poop?.removeFromParent()
-                    //childNode(withName: "poop")?.removeFromParent()
-                    DispatchQueue.main.async {
-                        self.createAJelly(right: false, tutorial: false)
-                    }
-                    beginCreateJelly()
-                    firstJellyPassed = true
-                }
-            }
+//            else if contact.bodyA.node?.name == "leftEdge" && contact.bodyB.node?.name == "poop" ||
+//                contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "leftEdge" {
+//                if firstJellyPassed == false {
+//                    print("first removed")
+//                    //poop?.removeFromParent()
+//                    //childNode(withName: "poop")?.removeFromParent()
+////                    DispatchQueue.main.async {
+////                        self.createAJelly(right: false, tutorial: false)
+////                    }
+//                    beginCreateJelly()
+//                    firstJellyPassed = true
+//                }
+//            }
         }
 
     }
@@ -568,32 +629,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //    func didEnd(_ contact: SKPhysicsContact) {
 //        if contact.bodyA.node?.name == "rightContact" || contact.bodyB.node?.name == "rightContact" {
 //            if lightLeft?.isEnabled == false {
-//                //lightEnable(enable: true)
-//                //poop?.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.removeFromParent()]))
-//            } else {
+//                lightEnable(enable: true)
 //                //poop?.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.removeFromParent()]))
 //            }
-//        } else if contact.bodyA.node?.name == "leftContact" || contact.bodyB.node?.name == "leftContact" {
-//            //poop?.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.removeFromParent()]))
-//
 //        }
+////        else if contact.bodyA.node?.name == "leftContact" || contact.bodyB.node?.name == "leftContact" {
+////            //poop?.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.removeFromParent()]))
+////
+////        }
 //    }
     
     func gameIsOver(bitten : Bool) {
+        poop?.speed = 0
         if score > best {
             best = score
             defaults.set(best, forKey: "best")
         }
         //calculate rank here
-        var rank : Int = 103 - score
-        if score < 4 {
+//        var rank : Int = 103 - score
+//        if score < 4 {
+//            rank = 99
+//        } else if score > 102 {
+//            rank = 1
+//        }
+        var rank : CGFloat = 100 - CGFloat(score) * 1.49
+        if score < 1 {
             rank = 99
-        } else if score > 102 {
+        } else if score > 66 {
             rank = 1
         }
         bestScore?.text = String(best)
         thisScore?.text = String(score)
-        rankScore?.text = "top \(rank)%"
+        rankScore?.text = "top \(Int(rank))%, \(ringsNameArray[Int(rank/20)])"
         let revealBoard = SKAction.fadeIn(withDuration: 1.5)
         gameBoard?.run(revealBoard)
         
@@ -635,7 +702,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         bestScore?.alpha = 1
         thisScore?.alpha = 1
         rankScore?.alpha = 1
-        ring?.texture = ringsArray[rank/20]
+        ring?.texture = ringsArray[Int(rank/20)]
         ring?.zPosition = 4
         ring?.alpha = 1
         //enable button so user can restart game
@@ -649,11 +716,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
             if tutorial == true {
                 troll?.run(rotateCounterClock!)
                 playSound(soundURL: diverSound!)
-                troll?.physicsBody?.applyAngularImpulse(-2.5)
+                troll?.physicsBody?.applyAngularImpulse(-3.6)
                 //poop?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3), SKAction.removeFromParent()]))
-                poop?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3)]))
+                //poop?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3)]))
                 //childNode(withName: "poop")?.run(SKAction.sequence([SKAction.moveBy(x: -size.width, y: 0, duration: 3)]))
-                //beginCreateJelly()
+                beginCreateJelly()
                 tutorial = false
                 points = 1
                 tapIcon?.removeFromParent()
@@ -771,9 +838,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         troll?.zRotation = 0
         troll?.physicsBody?.angularVelocity = 0
         //diverTexture?.texture = diverTexture1
-        topBite?.position.y = 383.169
-        botBite?.position.y = -383.169
+        //topBite?.position.y = 383.169
+        //botBite?.position.y = -383.169
+        topBite?.position = positionArray![0]
+        botBite?.position = positionArray![1]
+        leftEdge?.position = positionArray![2]
+        rightEdge?.position = positionArray![3]
         poop?.removeFromParent()
+        leftJellyPassed = false
+        rightJellyPassed = false
+        lightsOnValue = 0
+        stillTutor = true
+
         //childNode(withName: "poop")?.removeFromParent()
         opacityZero()
         //gameBoard?.run(SKAction.moveTo(y: (troll?.position.y)! + size.height, duration: 1))
@@ -782,7 +858,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //        }
         
         initJelly()
-        createAJelly(right: true, tutorial: true)
+        //createAJelly(right: true, tutorial: true)
         print(poop?.position)
         tutorial = true
         lightEnable(enable: false)
