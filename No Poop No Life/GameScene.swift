@@ -65,9 +65,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     var lightTop : SKLightNode?
     var lightBot : SKLightNode?
     var lightLeft : SKLightNode?
+    //var lightFeet : SKLightNode?
     
     
     var poop : SKSpriteNode?
+    var poop2 : SKSpriteNode?
     
     var diverTexture : SKSpriteNode?
 
@@ -226,7 +228,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         lightTop = troll?.childNode(withName: "lightTop") as? SKLightNode
         lightBot = troll?.childNode(withName: "lightBot") as? SKLightNode
         lightLeft = troll?.childNode(withName: "lightLeft") as? SKLightNode
+        //lightFeet = troll?.childNode(withName: "lightFeet") as? SKLightNode
+
         lightEnable(enable: false)
+        //lightFeet?.isEnabled = false
         
         
         
@@ -249,7 +254,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         
         //2.7, 2.4
         //actions
-        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 1.8, duration: 0.2)
+        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 1.8, duration: 0.3)
         //topBiteUp = SKAction.moveTo(y: (troll?.position.y)!, duration: 0.01)
         //botBiteDown = SKAction.moveTo(y: (botBite?.position.y)!, duration: 0.01)
         //topBiteUp = SKAction.moveBy(x: 0, y: 60 , duration: 0.01)
@@ -324,7 +329,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     }
     
     func initJelly() {
-        points = 2
+        points = 1
         poop = SKSpriteNode(imageNamed: "Jellyfish4")
         poop?.position = CGPoint(x: size.width * 2, y: 0)
         poop?.zPosition = (topBite?.zPosition)! + 1
@@ -346,8 +351,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         poop?.lightingBitMask = 1
         poop?.shadowCastBitMask = 0
         poop?.shadowedBitMask = 1
-        
         poop?.run(SKAction.repeatForever(jellyAnimation))
+        
+        poop2 = SKSpriteNode(imageNamed: "Jellyfish4")
+        poop2?.position = CGPoint(x: size.width * 2, y: 0)
+        poop2?.zPosition = (topBite?.zPosition)! + 1
+        poop2?.name = "poop"
+        addChild(poop2!)
+        poop2?.physicsBody = SKPhysicsBody(rectangleOf: (poop?.size)!)
+        //        poop?.physicsBody?.mass = 1
+        //        poop?.physicsBody?.linearDamping = 0
+        //        poop?.physicsBody?.restitution = 0
+        //        poop?.physicsBody?.friction = 0
+        //        poop?.physicsBody?.angularDamping = 0
+        poop2?.physicsBody?.categoryBitMask = poopCategory
+        poop2?.physicsBody?.affectedByGravity = false
+        poop2?.physicsBody?.contactTestBitMask = trollCategory | scoreCategory
+        
+        //set this to 0 if u dont want collison of poop
+        //poop.physicsBody?.collisionBitMask = topBiteCategory | botBiteCategory
+        poop2?.physicsBody?.collisionBitMask = 0
+        poop2?.lightingBitMask = 1
+        poop2?.shadowCastBitMask = 0
+        poop2?.shadowedBitMask = 1
+        
+        poop2?.run(SKAction.repeatForever(jellyAnimation))
     }
     
     func opacityZero() {
@@ -361,7 +389,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //create jellyfishes for the rest of the game after tutorial
     func beginCreateJelly() {
         var time : Double = 4
-        poopTimer = Timer.scheduledTimer(withTimeInterval: 2.1, repeats: true, block: { (timer) in
+        //2.1
+        poopTimer = Timer.scheduledTimer(withTimeInterval: 2.6, repeats: true, block: { (timer) in
             
             if arc4random_uniform(2) == 1 {
                 time = 0.1
@@ -412,6 +441,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         lightBot?.isEnabled = enable
         lightLeft?.isEnabled = enable
     }
+    
+   
 //    func createAJelly(right : Bool, tutorial : Bool) {
 //
 //        //slowedBefore = false
@@ -481,6 +512,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //        }
 //    }
     func createAJelly(right : Bool, tutorial : Bool) {
+        if lightBot?.isEnabled == false {
+            
+            lightEnable(enable: true)
+        }
+        //lightFeet?.isEnabled = false
 //        //slowedBefore = false
 //        points = 2
 //        poop = SKSpriteNode(imageNamed: "Jellyfish4")
@@ -505,41 +541,55 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         //let rightYmax = (troll?.size.height)! / 2.2 //- poop.size.height
         //let rightYmin = (troll?.size.width)! +  1.3 * (poop?.size.height)!
         let jellyDistance = (troll?.size.height)! / 2 - (poop?.size.height)! / 2.5
-        points = 2
+        let poop2XExtra = (poop?.size.width)! * 2.3
+        let poopX = (size.width / 2) + ((poop?.size.width)! / 2)
+        let poop2X = poopX + poop2XExtra
+        //let moveDis = size.width + (poop?.size.width)!
+        let moveDis = size.width + (poop?.size.width)! + poop2XExtra
+        points = 1
         if right == true {
             //animation
             //poop?.run(SKAction.repeatForever(jellyAnimation))
             //unint 32 has to be unsigned otherwise error
             poop?.zRotation = 0
+            poop2?.zRotation = 0
             //let poopY = rightYmin  + CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
             let poopY = jellyDistance
-            if tutorial == true {
-                poop?.position = CGPoint(x: (size.width / 2) + (poop?.size.width)!, y: poopY)
-                let moveToLeft = SKAction.moveBy(x: -(size.width / 3.2), y: 0, duration: 1.5)
-                poop?.run(moveToLeft)
+            //if tutorial == true {
+                //poop?.position = CGPoint(x: (size.width / 2) + (poop?.size.width)!, y: poopY)
+                //let moveToLeft = SKAction.moveBy(x: -(size.width / 3.2), y: 0, duration: 1.5)
+                //poop?.run(moveToLeft)
 
-            } else {
-                poop?.position = CGPoint(x: (size.width / 2) + ((poop?.size.width)! / 2), y: poopY)
-                let moveToLeft = SKAction.moveBy(x: -size.width - (poop?.size.width)!, y: 0, duration: 1.9)
-                //let moveToLeft = SKAction.applyForce(CGVector(dx: -151, dy: 0), duration: 3)
-                //let moveToLeft = SKAction.wait(forDuration: 3)
-                poop?.run(SKAction.sequence([moveToLeft]))
-                //poop?.physicsBody?.velocity = CGVector(dx: -size.width/3, dy: 0)
+            //} else {
+            poop?.position = CGPoint(x: poopX, y: poopY)
+            poop2?.position = CGPoint(x: poop2X, y: poopY)
+            let moveToLeft = SKAction.moveBy(x: -moveDis, y: 0, duration: 2.5)
+            //let moveFinishLeft = SKAction.moveBy(x: -poop2XExtra, y: 0, duration: 0.18)
+            //let moveToLeft2 = SKAction.moveBy(x: -moveDis - , y: 0, duration: 1.9)
+            //let moveToLeft = SKAction.applyForce(CGVector(dx: -151, dy: 0), duration: 3)
+            //let moveToLeft = SKAction.wait(forDuration: 3)
+            poop?.run(SKAction.sequence([moveToLeft]))
+            poop2?.run(SKAction.sequence([moveToLeft]))
 
-                //print(size.width/3) velocity is 455
-            }
+            //poop?.physicsBody?.velocity = CGVector(dx: -size.width/3, dy: 0)
+
+            //print(size.width/3) velocity is 455
+            //}
           
 
         } else {
             //poop?.run(SKAction.repeatForever(jellyAnimation))
             //DispatchQueue.main.async {
-                self.poop?.zRotation = CGFloat.pi
+            poop?.zRotation = CGFloat.pi
+            poop2?.zRotation = CGFloat.pi
             //}
             //poop?.zRotation = CGFloat.pi
             //unint 32 has to be unsigned otherwise error
             //let poopY = -rightYmin - CGFloat(arc4random_uniform(UInt32(rightYmax - rightYmin)))
             let poopY = -jellyDistance
-            poop?.position = CGPoint(x: (-size.width / 2) - ((poop?.size.width)! / 2), y: poopY)
+            poop?.position = CGPoint(x: -poopX, y: poopY)
+            poop2?.position = CGPoint(x: -poop2X, y: poopY)
+
             //poop?.position = CGPoint(x: -1500, y: 1000)
 //            if tutorial == true {
 //                let pause = SKAction.wait(forDuration: 3.3)
@@ -547,12 +597,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //                let moveToRight = SKAction.moveBy(x: size.width, y: 0, duration: 2.6)
 //                poop?.run(SKAction.sequence([pause, moveToRight]))
 //            } else {
-            let moveToRight = SKAction.moveBy(x: size.width + (poop?.size.width)!, y: 0, duration: 1.9)
+            //1.9
+            let moveToRight = SKAction.moveBy(x: moveDis, y: 0, duration: 2.5)
+            //let moveFinishRight = SKAction.moveBy(x: poop2XExtra, y: 0, duration: 0.18)
+
                 //let moveToRight = SKAction.applyForce(CGVector(dx: 151, dy: 0), duration: 3)
                 //let moveToRight = SKAction.wait(forDuration: 3)
                 //poop?.physicsBody?.velocity = CGVector(dx: size.width/3, dy: 0)
                 //poop?.run(SKAction.sequence([moveToRight]))
                 poop?.run(moveToRight)
+                poop2?.run(SKAction.sequence([moveToRight]))
             //}
             //left -1
           
@@ -626,6 +680,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     
     func gameIsOver(bitten : Bool) {
         poop?.speed = 0
+        poop2?.speed = 0
         if score > best {
             best = score
             defaults.set(best, forKey: "best")
@@ -671,6 +726,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         poop?.lightingBitMask = 0
         poop?.shadowCastBitMask = 0
         poop?.shadowedBitMask = 0
+        poop2?.lightingBitMask = 0
+        poop2?.shadowCastBitMask = 0
+        poop2?.shadowedBitMask = 0
 //        (childNode(withName: "poop") as? SKSpriteNode)?.lightingBitMask = 0
 //        (childNode(withName: "poop") as? SKSpriteNode)?.shadowCastBitMask = 0
 //        (childNode(withName: "poop") as? SKSpriteNode)?.shadowedBitMask = 0
@@ -715,8 +773,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
                 troll?.run(rotateCounterClock!)
                 playSound(soundURL: diverSound!)
                 //if let jelly = childNode(withName: "poop") {
-                if (lightBox?.intersects(poop!))! {
+                if (lightBox?.intersects(poop!))! || (lightBox?.intersects(poop2!))! {
                         points = 1
+                    lightEnable(enable: false)
                         //                    if slowedBefore == false {
                         //                        slowedBefore = true
                         //                        poop?.physicsBody?.velocity.dx = (poop?.physicsBody?.velocity.dx)! * 0.1
@@ -724,6 +783,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
                         //                            self.poop?.physicsBody?.velocity.dx = (self.poop?.physicsBody?.velocity.dx)! * 10
                         //                        })
                         //                    }
+                    //if lightBot?.isEnabled == true {
+                        //lightFeet?.isEnabled = true
+                    //}
                     }
                 //}
                 //print(poop?.physicsBody?.velocity)
@@ -831,6 +893,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         leftEdge?.position = positionArray![2]
         rightEdge?.position = positionArray![3]
         poop?.removeFromParent()
+        poop2?.removeFromParent()
         leftJellyPassed = false
         rightJellyPassed = false
     
