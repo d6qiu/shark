@@ -144,7 +144,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //saved position array
     var positionArray : [CGPoint]?
     
-    
+    struct Queue{
+        
+        var items:[SKSpriteNode] = []
+        
+        mutating func enqueue(element: SKSpriteNode)
+        {
+            items.append(element)
+        }
+        
+        mutating func dequeue() -> SKSpriteNode?
+        {
+            if items.isEmpty {
+                return nil
+            }
+            else{
+                let tempElement = items.first
+                items.remove(at: 0)
+                return tempElement
+            }
+        }
+        
+    }
     
     func setUpGame() {
         //scuba diver animation setup
