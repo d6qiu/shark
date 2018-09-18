@@ -144,6 +144,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
     //saved position array
     var positionArray : [CGPoint]?
     
+    
+    
     func setUpGame() {
         //scuba diver animation setup
         animation = SKAction.animate(with: [diverTexture2, diverTexture1], timePerFrame: 0.1)
