@@ -13,7 +13,7 @@
 		E440531B2122AC710075E951 /* diverSplash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E44053182122AC710075E951 /* diverSplash.mp3 */; };
 		E440531D2122AC710075E951 /* buzz.wav in Resources */ = {isa = PBXBuildFile; fileRef = E440531A2122AC710075E951 /* buzz.wav */; };
 		E48DB9502120F1E3008BA0B0 /* dpcomic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E48DB94F2120F1E3008BA0B0 /* dpcomic.ttf */; };
-		E4D35540213E24AA003CE8AA /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = E4D3553F213E24AA003CE8AA /* ding.wav */; };
+		E4D0BAD321530C340007BB96 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = E4D0BAD221530C340007BB96 /* ding.wav */; };
 		E4DD9EE42116A2B60029301A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DD9EE32116A2B60029301A /* AppDelegate.swift */; };
 		E4DD9EE62116A2B60029301A /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = E4DD9EE52116A2B60029301A /* GameScene.sks */; };
 		E4DD9EEA2116A2B60029301A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DD9EE92116A2B60029301A /* GameScene.swift */; };
@@ -34,7 +34,7 @@
 		E44053182122AC710075E951 /* diverSplash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = diverSplash.mp3; sourceTree = "<group>"; };
 		E440531A2122AC710075E951 /* buzz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = buzz.wav; sourceTree = "<group>"; };
 		E48DB94F2120F1E3008BA0B0 /* dpcomic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dpcomic.ttf; sourceTree = "<group>"; };
-		E4D3553F213E24AA003CE8AA /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
+		E4D0BAD221530C340007BB96 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
 		E4DD9EE02116A2B60029301A /* No Poop No Life.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "No Poop No Life.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4DD9EE32116A2B60029301A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4DD9EE52116A2B60029301A /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 			children = (
 				E440519E2131094A00EA1957 /* biteSound2.wav */,
 				E440519C2131081200EA1957 /* biteSound.aiff */,
+				E4D0BAD221530C340007BB96 /* ding.wav */,
 				E440531A2122AC710075E951 /* buzz.wav */,
-				E4D3553F213E24AA003CE8AA /* ding.wav */,
 				E44053182122AC710075E951 /* diverSplash.mp3 */,
 			);
 			path = Sounds;
@@ -182,6 +182,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4D0BAD321530C340007BB96 /* ding.wav in Resources */,
 				E440519D2131081200EA1957 /* biteSound.aiff in Resources */,
 				E4DD9EEF2116A2B60029301A /* Main.storyboard in Resources */,
 				E4DD9EE62116A2B60029301A /* GameScene.sks in Resources */,
@@ -191,7 +192,6 @@
 				E4DD9EF12116A2B80029301A /* Assets.xcassets in Resources */,
 				E4DD9EF42116A2B80029301A /* LaunchScreen.storyboard in Resources */,
 				E440531D2122AC710075E951 /* buzz.wav in Resources */,
-				E4D35540213E24AA003CE8AA /* ding.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

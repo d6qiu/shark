@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "STI_4_Board@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "STI_4_Board.png",
       "scale" : "2x"
     },
     {
