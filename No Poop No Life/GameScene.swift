@@ -564,7 +564,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //               //}
 //
 //
-//            } //when game over triggers
+//            } 
             
             if contact.bodyA.node?.name == "gem" && contact.bodyB.node?.name == "troll" && gemTouched == false || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "gem" && gemTouched == false{
                 gemTouched = true
@@ -577,10 +577,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
                
                 troll?.physicsBody?.angularVelocity = 0
                 gameIsOver(bitten : false)
-                
-
             
-                
             }
             else if contact.bodyA.node?.name == "midContact" && contact.bodyB.node?.name == "topBite" || contact.bodyA.node?.name == "topBite" && contact.bodyB.node?.name == "midContact"{
                 //poop?.speed = 0
