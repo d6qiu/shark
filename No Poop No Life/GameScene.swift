@@ -253,7 +253,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         
         //2.7, 2.4
         //actions
-        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 1.8, duration: 0.26)
+        rotateCounterClock = SKAction.rotate(byAngle: CGFloat.pi / 1.8, duration: 0.28)
         //topBiteUp = SKAction.moveTo(y: (troll?.position.y)!, duration: 0.01)
         //botBiteDown = SKAction.moveTo(y: (botBite?.position.y)!, duration: 0.01)
         //topBiteUp = SKAction.moveBy(x: 0, y: 60 , duration: 0.01)
@@ -401,6 +401,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         poopTimer = Timer.scheduledTimer(withTimeInterval: 3.1, repeats: true, block: { (timer) in
             if arc4random_uniform(2) == 1 {
                 time = 0.05
+            } else {
+                time = 0
             }
             self.poopDelay = Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { (timer) in
 
