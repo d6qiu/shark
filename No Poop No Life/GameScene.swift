@@ -452,7 +452,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
         gemTouched = false
 
         //let moveDis = size.width + (poop?.size.width)!
-        let moveDis = size.width + (poop?.size.width)! + poopInBetween + poopInBetween
+        let moveDis = (size.width + (poop?.size.width)! + poopInBetween + poopInBetween) * 0.93
+        let iniMoveDis = moveDis / 0.93 * 0.07
+        let movedistance = (size.width + (poop?.size.width)! + poopInBetween + poopInBetween) / 2.5
+        print(movedistance)
         
         if right == true {
             self.rightJelly = true
@@ -480,16 +483,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
             } else {
                 gem?.position = CGPoint(x: poop2X + gemDis, y: poopY)
             }
-            let moveToLeft = SKAction.moveBy(x: -moveDis, y: 0, duration: 2.5)
+            let moveToLeft = SKAction.moveBy(x: -moveDis, y: 0, duration: 2.325)
+            let moveIniLeft = SKAction.moveBy(x: -iniMoveDis, y: 0, duration: 0.6)
             //let moveFinishLeft = SKAction.moveBy(x: -poop2XExtra, y: 0, duration: 0.18)
             //let moveToLeft2 = SKAction.moveBy(x: -moveDis - , y: 0, duration: 1.9)
             //let moveToLeft = SKAction.applyForce(CGVector(dx: -151, dy: 0), duration: 3)
             //let moveToLeft = SKAction.wait(forDuration: 3)
-            poop?.run(SKAction.sequence([moveToLeft]))
-            poop2?.run(SKAction.sequence([moveToLeft]))
-            poop3?.run(SKAction.sequence([moveToLeft]))
-            
-            gem?.run(moveToLeft)
+            poop?.run(SKAction.sequence([moveIniLeft, moveToLeft]))
+            poop2?.run(SKAction.sequence([moveIniLeft, moveToLeft]))
+            poop3?.run(SKAction.sequence([moveIniLeft, moveToLeft]))
+            gem?.run(SKAction.sequence([moveIniLeft, moveToLeft]))
 
             //poop?.physicsBody?.velocity = CGVector(dx: -size.width/3, dy: 0)
 
@@ -525,17 +528,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //                poop?.run(SKAction.sequence([pause, moveToRight]))
 //            } else {
             //1.9
-            let moveToRight = SKAction.moveBy(x: moveDis, y: 0, duration: 2.5)
+            let moveToRight = SKAction.moveBy(x: moveDis, y: 0, duration: 2.325)
+            let moveIniRight = SKAction.moveBy(x: iniMoveDis, y: 0, duration: 0.6)
+
+            
+            print("\(moveDis / 2.325)")
             //let moveFinishRight = SKAction.moveBy(x: poop2XExtra, y: 0, duration: 0.18)
 
                 //let moveToRight = SKAction.applyForce(CGVector(dx: 151, dy: 0), duration: 3)
                 //let moveToRight = SKAction.wait(forDuration: 3)
                 //poop?.physicsBody?.velocity = CGVector(dx: size.width/3, dy: 0)
                 //poop?.run(SKAction.sequence([moveToRight]))
-                poop?.run(moveToRight)
-                poop2?.run(SKAction.sequence([moveToRight]))
-                poop3?.run(moveToRight)
-                gem?.run(moveToRight)
+                poop?.run(SKAction.sequence([moveIniRight, moveToRight]))
+                poop2?.run(SKAction.sequence([moveIniRight, moveToRight]))
+                poop3?.run(SKAction.sequence([moveIniRight, moveToRight]))
+                gem?.run(SKAction.sequence([moveIniRight, moveToRight]))
         }
     }
 
@@ -615,17 +622,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //        } else if score > 102 {
 //            rank = 1
 //        }
-        var rank : CGFloat = 100 - CGFloat(score) * 1.49
+//        var rank : CGFloat = 100 - CGFloat(score) * 1.49
+//        if score < 1 {
+//            rank = 99
+//        } else if score > 66 {
+//            rank = 1
+//        }
+        var rank : CGFloat = 100 - CGFloat(score) * 2.13
         if score < 1 {
             rank = 99
-        } else if score > 66 {
+        } else if score > 46 {
             rank = 1
+        } else {
+            if arc4random_uniform(2) == 1 {
+                rank -= 1
+            }
         }
         bestScore?.text = String(best)
         thisScore?.text = String(score)
         rankScore?.text = "top \(Int(rank))% "
         metalRank?.text = "\(ringsNameArray[Int(rank/20)])"
-        let revealBoard = SKAction.fadeIn(withDuration: 1.5)
+        let revealBoard = SKAction.fadeIn(withDuration: 1.0)
         gameBoard?.run(revealBoard)
         
         //self.speed = 0
