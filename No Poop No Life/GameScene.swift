@@ -564,13 +564,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate{
 //               //}
 //
 //
-//            } 
+//            }
             
             if contact.bodyA.node?.name == "gem" && contact.bodyB.node?.name == "troll" && gemTouched == false || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "gem" && gemTouched == false{
                 gemTouched = true
                 gem?.isHidden = true
                 run(SKAction.playSoundFileNamed("ding.wav", waitForCompletion: true))
-                score += points
+                score += 1
                 scoreBoard?.text = String(score)
             }
             else if contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "troll" || contact.bodyA.node?.name == "troll" && contact.bodyB.node?.name == "poop" {
