@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/damon/Desktop/projects/No Poop No Life/No Poop No Life/InternetConnection.swift">
+   </FileRef>
+   <FileRef
       location = "group:No Poop No Life.xcodeproj">
    </FileRef>
    <FileRef

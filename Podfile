@@ -7,6 +7,6 @@ target 'No Poop No Life' do
   # Pods for No Poop No Life
 
 pod 'Google-Mobile-Ads-SDK'
-
+pod 'Alamofire'
 
 end
