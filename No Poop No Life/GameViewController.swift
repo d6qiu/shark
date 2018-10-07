@@ -14,7 +14,8 @@ import GoogleMobileAds
 class GameViewController: UIViewController, GADBannerViewDelegate{
 
     
-    var bannerView : GADBannerView!
+    @IBOutlet var bannerView: GADBannerView!
+    //var bannerView : GADBannerView!
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -34,14 +35,44 @@ class GameViewController: UIViewController, GADBannerViewDelegate{
             view.showsNodeCount = true
         }
         
-//        bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerLandscape)
-//        self.view.addSubview(bannerView)
+        //bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerLandscape)
+        
+        //self.view.addSubview(bannerView)
+        bannerView.adUnitID = "ca-app-pub-4899697066667270/1539318048"
+        bannerView.rootViewController = self
+        bannerView.tag = 100
+        bannerView.load(GADRequest())
+        bannerView.isHidden = true
+        //bannerView.delegate = self
+        
+//        bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+//        addBannerView(bannerView)
 //        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
 //        bannerView.rootViewController = self
 //        bannerView.load(GADRequest())
 //        bannerView.delegate = self
         
     }
+//    func addBannerView(_ bannerView: GADBannerView) {
+//        bannerView.translatesAutoresizingMaskIntoConstraints = false
+//        view.addSubview(bannerView)
+//        view.addConstraints(
+//            [NSLayoutConstraint(item: bannerView,
+//                                attribute: .bottom,
+//                                relatedBy: .equal,
+//                                toItem: view.safeAreaLayoutGuide.bottomAnchor,
+//                                attribute: .top,
+//                                multiplier: 1,
+//                                constant: 0),
+//             NSLayoutConstraint(item: bannerView,
+//                                attribute: .centerX,
+//                                relatedBy: .equal,
+//                                toItem: view,
+//                                attribute: .centerX,
+//                                multiplier: 1,
+//                                constant: 0)
+//            ])
+//    }
 
     override var shouldAutorotate: Bool {
         return true

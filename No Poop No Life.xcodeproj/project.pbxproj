@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E440519D2131081200EA1957 /* biteSound.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E440519C2131081200EA1957 /* biteSound.aiff */; };
 		E440519F2131094A00EA1957 /* biteSound2.wav in Resources */ = {isa = PBXBuildFile; fileRef = E440519E2131094A00EA1957 /* biteSound2.wav */; };
 		E440530B212243F50075E951 /* Endgame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E440530A212243F50075E951 /* Endgame.swift */; };
-		E440531B2122AC710075E951 /* diverSplash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E44053182122AC710075E951 /* diverSplash.mp3 */; };
 		E440531D2122AC710075E951 /* buzz.wav in Resources */ = {isa = PBXBuildFile; fileRef = E440531A2122AC710075E951 /* buzz.wav */; };
+		E4863F67216313F800D343EF /* diverSplash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E4863F66216313F800D343EF /* diverSplash.mp3 */; };
 		E48DB9502120F1E3008BA0B0 /* dpcomic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E48DB94F2120F1E3008BA0B0 /* dpcomic.ttf */; };
 		E4D0BAD321530C340007BB96 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = E4D0BAD221530C340007BB96 /* ding.wav */; };
 		E4D1D07C215F6B9E007CDF0D /* InternetConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D1D07B215F6B9D007CDF0D /* InternetConnection.swift */; };
@@ -29,11 +28,10 @@
 		819D8D4DFB3DC03AA4C64500 /* Pods_No_Poop_No_Life.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_No_Poop_No_Life.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C35C0711E33C4E2EAC28D6E8 /* Pods-No Poop No Life.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-No Poop No Life.release.xcconfig"; path = "Pods/Target Support Files/Pods-No Poop No Life/Pods-No Poop No Life.release.xcconfig"; sourceTree = "<group>"; };
 		CF4BC2464F2953F3AFBDD57F /* Pods-No Poop No Life.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-No Poop No Life.debug.xcconfig"; path = "Pods/Target Support Files/Pods-No Poop No Life/Pods-No Poop No Life.debug.xcconfig"; sourceTree = "<group>"; };
-		E440519C2131081200EA1957 /* biteSound.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = biteSound.aiff; sourceTree = "<group>"; };
 		E440519E2131094A00EA1957 /* biteSound2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = biteSound2.wav; sourceTree = "<group>"; };
 		E440530A212243F50075E951 /* Endgame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endgame.swift; sourceTree = "<group>"; };
-		E44053182122AC710075E951 /* diverSplash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = diverSplash.mp3; sourceTree = "<group>"; };
 		E440531A2122AC710075E951 /* buzz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = buzz.wav; sourceTree = "<group>"; };
+		E4863F66216313F800D343EF /* diverSplash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = diverSplash.mp3; sourceTree = "<group>"; };
 		E48DB94F2120F1E3008BA0B0 /* dpcomic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dpcomic.ttf; sourceTree = "<group>"; };
 		E4D0BAD221530C340007BB96 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
 		E4D1D07B215F6B9D007CDF0D /* InternetConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InternetConnection.swift; path = "/Users/damon/Desktop/projects/No Poop No Life/No Poop No Life/InternetConnection.swift"; sourceTree = "<absolute>"; };
@@ -80,11 +78,10 @@
 		E44053152122997A0075E951 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				E4863F66216313F800D343EF /* diverSplash.mp3 */,
 				E440519E2131094A00EA1957 /* biteSound2.wav */,
-				E440519C2131081200EA1957 /* biteSound.aiff */,
 				E4D0BAD221530C340007BB96 /* ding.wav */,
 				E440531A2122AC710075E951 /* buzz.wav */,
-				E44053182122AC710075E951 /* diverSplash.mp3 */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -187,10 +184,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4D0BAD321530C340007BB96 /* ding.wav in Resources */,
-				E440519D2131081200EA1957 /* biteSound.aiff in Resources */,
+				E4863F67216313F800D343EF /* diverSplash.mp3 in Resources */,
 				E4DD9EEF2116A2B60029301A /* Main.storyboard in Resources */,
 				E4DD9EE62116A2B60029301A /* GameScene.sks in Resources */,
-				E440531B2122AC710075E951 /* diverSplash.mp3 in Resources */,
 				E440519F2131094A00EA1957 /* biteSound2.wav in Resources */,
 				E48DB9502120F1E3008BA0B0 /* dpcomic.ttf in Resources */,
 				E4DD9EF12116A2B80029301A /* Assets.xcassets in Resources */,
