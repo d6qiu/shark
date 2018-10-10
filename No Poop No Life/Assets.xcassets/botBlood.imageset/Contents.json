@@ -2,11 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "jellyfish5.png",
+      "filename" : "botBlood@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "botBlood@2x.png",
       "scale" : "2x"
     },
     {

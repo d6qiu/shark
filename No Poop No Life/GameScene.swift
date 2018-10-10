@@ -114,8 +114,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     //jelly's animation
     let jellyTexture1 = SKTexture(imageNamed: "Jellyfish4")
-    let jellyTextureFliped1 = SKTexture(imageNamed: "jellyfish5")
-    let jellyTexture2Fliped2 = SKTexture(imageNamed: "jellyfishFliped5")
     let jellyTextureRed = SKTexture(imageNamed: "jellyfishRed1")
     let tapTexture = SKTexture(imageNamed: "tap")
     var jellyAnimation = SKAction()
@@ -203,7 +201,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         troll?.physicsBody?.collisionBitMask = 0
         troll?.color = UIColor.clear
         trollRotation = (troll?.zRotation)!
-        
         diverTexture = troll?.childNode(withName: "diverTexture") as? SKSpriteNode
         
         //end of game scoreboard
@@ -596,6 +593,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 troll?.physicsBody?.angularVelocity = 0
                 sharkTopTeeth?.texture = topTeethBloodTexture
                 sharkBotTeeth?.texture = botTeethBloodTexture
+                troll?.isHidden = true
                 lightEnable(enable: false)
                 run(biteSound2)
                 gameIsOver(bitten: true)
@@ -659,6 +657,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     //MARK: - gameover handle methods
     func gameIsOver(bitten : Bool) {
         bannerView?.isHidden = false
+        scoreBoard?.isHidden = true
         poop?.speed = 0
         poop2?.speed = 0
         poop3?.speed = 0
@@ -752,6 +751,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         scoreBoard?.text = String(score)
         troll?.zRotation = trollRotation
         troll?.physicsBody?.angularVelocity = 0
+        troll?.isHidden = false
+        scoreBoard?.isHidden = false
         disMultiplier = 3.1
         topBite?.position = positionArray![0]
         botBite?.position = positionArray![1]
