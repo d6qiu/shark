@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E43474CE21AB40CB00CD7168 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43474CD21AB40CB00CD7168 /* Extensions.swift */; };
 		E440519F2131094A00EA1957 /* biteSound2.wav in Resources */ = {isa = PBXBuildFile; fileRef = E440519E2131094A00EA1957 /* biteSound2.wav */; };
 		E440530B212243F50075E951 /* Endgame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E440530A212243F50075E951 /* Endgame.swift */; };
 		E440531D2122AC710075E951 /* buzz.wav in Resources */ = {isa = PBXBuildFile; fileRef = E440531A2122AC710075E951 /* buzz.wav */; };
@@ -28,6 +29,7 @@
 		819D8D4DFB3DC03AA4C64500 /* Pods_No_Poop_No_Life.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_No_Poop_No_Life.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C35C0711E33C4E2EAC28D6E8 /* Pods-No Poop No Life.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-No Poop No Life.release.xcconfig"; path = "Pods/Target Support Files/Pods-No Poop No Life/Pods-No Poop No Life.release.xcconfig"; sourceTree = "<group>"; };
 		CF4BC2464F2953F3AFBDD57F /* Pods-No Poop No Life.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-No Poop No Life.debug.xcconfig"; path = "Pods/Target Support Files/Pods-No Poop No Life/Pods-No Poop No Life.debug.xcconfig"; sourceTree = "<group>"; };
+		E43474CD21AB40CB00CD7168 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E440519E2131094A00EA1957 /* biteSound2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = biteSound2.wav; sourceTree = "<group>"; };
 		E440530A212243F50075E951 /* Endgame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endgame.swift; sourceTree = "<group>"; };
 		E440531A2122AC710075E951 /* buzz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = buzz.wav; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				E4DD9EF52116A2B80029301A /* Info.plist */,
 				E48DB94F2120F1E3008BA0B0 /* dpcomic.ttf */,
 				E440530A212243F50075E951 /* Endgame.swift */,
+				E43474CD21AB40CB00CD7168 /* Extensions.swift */,
 			);
 			path = "No Poop No Life";
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				TargetAttributes = {
 					E4DD9EDF2116A2B60029301A = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -242,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4DD9EEA2116A2B60029301A /* GameScene.swift in Sources */,
+				E43474CE21AB40CB00CD7168 /* Extensions.swift in Sources */,
 				E440530B212243F50075E951 /* Endgame.swift in Sources */,
 				E4DD9EEC2116A2B60029301A /* GameViewController.swift in Sources */,
 				E4DD9EE42116A2B60029301A /* AppDelegate.swift in Sources */,
@@ -399,7 +404,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.damonqiu26.No-Poop-No-Lif";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -418,7 +423,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.damonqiu26.No-Poop-No-Lif";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

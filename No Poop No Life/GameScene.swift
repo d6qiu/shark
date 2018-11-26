@@ -53,6 +53,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var poop : SKSpriteNode?
     var poop2 : SKSpriteNode?
     var poop3 : SKSpriteNode?
+    
+    var name1 : SKLabelNode?
+    var name1String : String = ""
+    var name2 : SKLabelNode?
+    var name2String : String = ""
+    var name3 : SKLabelNode?
+    var name3String : String = ""
+    
     var gem : SKSpriteNode?
     var gemColor : UIColor?
     
@@ -113,8 +121,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var strike = SKAction()
     
     //jelly's animation
-    let jellyTexture1 = SKTexture(imageNamed: "Jellyfish4")
-    let jellyTextureRed = SKTexture(imageNamed: "jellyfishRed1")
+    let jellyTexture1 = SKTexture(imageNamed: "octopus")
+    let jellyTextureRed = SKTexture(imageNamed: "evilOctopus")
+    //let fartTexture = SKTexture(imageNamed: "fartOctopus")
     let tapTexture = SKTexture(imageNamed: "tap")
     var jellyAnimation = SKAction()
     
@@ -135,6 +144,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     //MARK: - tutorial handle variables
     var tapIcon : SKSpriteNode?
     var tapText : SKLabelNode?
+    var rotateIcon : SKSpriteNode?
+    var closeInText : SKLabelNode?
+    var closeInBool = false
     var tutorial : Bool = true
     var rightJellyPassed : Bool = false
     var leftJellyPassed : Bool = false
@@ -182,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         //scuba diver animation setup
         animation = SKAction.animate(with: [diverTexture2, diverTexture1], timePerFrame: 0.1)
 
-        jellyAnimation = SKAction.animate(with: [jellyTexture1, jellyTextureRed], timePerFrame: 0.3)
+        jellyAnimation = SKAction.animate(with: [jellyTexture1, jellyTextureRed], timePerFrame: 1.26)
 
         strike = SKAction.repeat(animation, count: 3)
         best = defaults.double(forKey: "best")
@@ -258,6 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 
 
         lightEnable(enable: false)
+        nameEnable(enable: false)
         
         
         
@@ -319,19 +332,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         scoreBoard?.text = String(score)
         scoreBoard?.zPosition = (troll?.zPosition)! - 1
+        scoreBoard?.isHidden = true
         
         
         
         //tuturoial handler
         tapIcon = childNode(withName: "tapIcon") as? SKSpriteNode
+        rotateIcon = childNode(withName: "rotateIcon") as? SKSpriteNode
+        rotateIcon?.zPosition = (troll?.zPosition)! - 1
         let tapWidth = tapIcon?.size.width
         let tapHeight = tapIcon?.size.height
         tapIcon!.run(SKAction.repeatForever(SKAction.sequence([SKAction.resize(toWidth: tapWidth!, height: tapHeight!, duration: 0.3), SKAction.resize(toWidth: tapWidth! * 0.6, height: tapHeight! * 0.6, duration: 0.3)])))
         tapText = childNode(withName: "tapText") as? SKLabelNode
-        
+        closeInText = childNode(withName: "closeInText") as? SKLabelNode
+        closeInText?.isHidden = true
         lightBox = troll?.childNode(withName: "lightBox") as? SKSpriteNode
         lightBox?.color = UIColor.clear
         
+        let name1 = childNode(withName: "name1") as? SKLabelNode
+        name1String = (name1?.text)!
         initJelly()
 //        if best > 15 {
 //            bannerView?.isHidden = false
@@ -356,6 +375,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         lightOfDiver3?.isEnabled = enable
     }
     
+    private func nameEnable(enable: Bool) {
+        name1Node.isHidden = enable
+        name2Node.isHidden = enable
+        name3Node.isHidden = enable
+    }
+    
+    let name1Node : SKLabelNode = {
+        let name1 = SKLabelNode()
+        name1.name = "name1"
+        name1.fontColor = .green
+        name1.fontSize = 40
+        name1.fontName = UIFont.boldSystemFont(ofSize: 40).fontName
+        return name1
+    }()
+    
+    let name2Node : SKLabelNode = {
+        let name1 = SKLabelNode()
+        name1.name = "name1"
+        name1.fontColor = .green
+        name1.fontSize = 40
+        name1.fontName = UIFont.boldSystemFont(ofSize:40).fontName
+        return name1
+    }()
+    let name3Node : SKLabelNode = {
+        let name1 = SKLabelNode()
+        name1.name = "name1"
+        name1.fontColor = .green
+        name1.fontSize = 40
+        name1.fontName = UIFont.boldSystemFont(ofSize: 40).fontName
+        
+        return name1
+    }()
+    
     //MARK: - Jellyfishes creation methods
     func initJelly() {
         poop = SKSpriteNode(imageNamed: "Jellyfish4")
@@ -363,12 +415,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         poop?.zPosition = (topBite?.zPosition)! + 1
         poop?.name = "poop"
         addChild(poop!)
+    
+        name1Node.text = name1String
+        poop?.addChild(name1Node)
+        name1Node.position.y = (poop?.position.y)! - ((poop?.frame.height)! / 1.26)
+//        name1 = childNode(withName: "name1") as? SKLabelNode
+//        name1?.name = "name1"
+//        name1?.move(toParent: poop!)
+//        //poop?.addChild(name1!)
         
         gem = SKSpriteNode(imageNamed: "emerald")
         gem?.name = "gem"
         gem?.position = CGPoint(x: size.width * 3, y: 0)
         gem?.zPosition = (topBite?.zPosition)! + 1
         addChild(gem!)
+        
         
         poop?.physicsBody = SKPhysicsBody(rectangleOf: (poop?.size)!)
         poop?.physicsBody?.categoryBitMask = poopCategory
@@ -388,6 +449,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         poop2?.zPosition = (topBite?.zPosition)! + 1
         poop2?.name = "poop"
         addChild(poop2!)
+        
+        name2Node.text = name1String
+        poop2?.addChild(name2Node)
+        name2Node.position.y = (poop2?.position.y)! - ((poop2?.frame.height)! / 1.26)
+
         poop2?.physicsBody = SKPhysicsBody(rectangleOf: (poop?.size)!)
         poop2?.physicsBody?.categoryBitMask = poopCategory
         poop2?.physicsBody?.affectedByGravity = false
@@ -406,6 +472,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         poop3?.zPosition = (topBite?.zPosition)! + 1
         poop3?.name = "poop"
         addChild(poop3!)
+        
+        name3Node.text = name1String
+        poop3?.addChild(name3Node)
+        name3Node.position.y = (poop3?.position.y)! - ((poop3?.frame.height)! / 1.26)
+
         poop3?.physicsBody = SKPhysicsBody(rectangleOf: (poop?.size)!)
         
         poop3?.physicsBody?.categoryBitMask = poopCategory
@@ -472,6 +543,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     func createTutorJelly() {
         let poopX = (size.width / 2) + ((poop?.size.width)! / 2)
         poop?.zRotation = 0
+        name1Node.zRotation = 0
+        name2Node.zRotation = 0
+        name3Node.zRotation = 0
         //2.3
         let poopInBetween  = (poop?.size.width)! * 2.3
        
@@ -480,7 +554,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 
         let jellyDistance = (troll?.size.height)! / 2 - (poop?.size.height)! / 2.5
         let poopY = jellyDistance
-
+        
         poop?.position = CGPoint(x: poopX, y: poopY)
         //2.325 2.625
         let moveToLeft = SKAction.moveBy(x: -moveDis, y: 0, duration: 2.325)
@@ -516,6 +590,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             poop?.zRotation = 0
             poop2?.zRotation = 0
             poop3?.zRotation = 0
+            name1Node.zRotation = 0
+            name2Node.zRotation = 0
+            name3Node.zRotation = 0
+            
             let poopY = jellyDistance
             poop?.position = CGPoint(x: poopX, y: poopY)
             poop2?.position = CGPoint(x: poop2X, y: poopY)
@@ -543,7 +621,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             poop?.zRotation = CGFloat.pi
             poop2?.zRotation = CGFloat.pi
             poop3?.zRotation = CGFloat.pi
-            
+            name1Node.zRotation = CGFloat.pi
+            name2Node.zRotation = CGFloat.pi
+            name3Node.zRotation = CGFloat.pi
             
             //unint 32 has to be unsigned otherwise error
             let poopY = -jellyDistance
@@ -595,14 +675,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 sharkBotTeeth?.texture = botTeethBloodTexture
                 troll?.isHidden = true
                 lightEnable(enable: false)
+                nameEnable(enable: false)
                 run(biteSound2)
+                closeInText?.isHidden = false
+                closeInBool = true
                 gameIsOver(bitten: true)
             }
             else if contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "leftContact" || contact.bodyB.node?.name == "poop" && contact.bodyA.node?.name == "leftContact" || contact.bodyA.node?.name == "poop" && contact.bodyB.node?.name == "rightContact" || contact.bodyB.node?.name == "poop" && contact.bodyA.node?.name == "rightContact" {
                 run(dingSound)
+                scoreBoard?.isHidden = false
                 score += 0.5
                 scoreBoard?.text = String(score)
                 tapIcon?.removeFromParent()
+                rotateIcon?.removeFromParent()
                 tapText?.removeFromParent()
                 
             }
@@ -615,6 +700,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if contact.bodyA.node?.name == "rightContact" && contact.bodyB.node == poop3 || contact.bodyA.node == poop3 && contact.bodyB.node?.name == "rightContact" || contact.bodyA.node?.name == "leftContact" && contact.bodyB.node == poop3 || contact.bodyA.node == poop3 && contact.bodyB.node?.name == "leftContact" {
             if lightOfDiver?.isEnabled == false  && leftJellyPassed == true && rightJellyPassed == true {
                 lightEnable(enable: true)
+                nameEnable(enable: true)
             }
         }
     }
@@ -629,13 +715,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 troll?.physicsBody?.applyAngularImpulse(-9.6)
                 beginCreateJelly()
                 tutorial = false
-                tapText?.text = "keep taping"
+                tapText?.text = "tap fast dodge octopus"
             } else {
                 troll?.run(rotateCounterClock!)
                 run(diverSound)
                 if (lightBox?.intersects(poop!))! || (lightBox?.intersects(poop2!))! || (lightBox?.intersects(poop3!))! {
                     if leftJellyPassed == true && rightJellyPassed == true {
                         lightEnable(enable: false)
+                        nameEnable(enable: false)
                     }
                     
                 }
@@ -762,6 +849,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         poop2?.removeFromParent()
         poop3?.removeFromParent()
         gem?.removeFromParent()
+        if closeInBool == true {
+            closeInText?.removeFromParent()
+        }
         scoreBoard?.zPosition = (troll?.zPosition)! - 1
 
         gemTouched = false
@@ -776,6 +866,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
      
         tutorial = true
         lightEnable(enable: false)
+        nameEnable(enable: false)
         firstJellyPassed = false
         
         bannerView?.isHidden = true
