@@ -83,18 +83,9 @@ class GameViewController: UIViewController, GADBannerViewDelegate, UITextFieldDe
                 stackView?.removeFromSuperview()
                 whiteView.removeFromSuperview()
                 // Present the scene
-//                bannerView.adUnitID = "ca-app-pub-4899697066667270/1539318048"
-//                bannerView.rootViewController = self
-//                bannerView.tag = 100
-//                bannerView.load(GADRequest())
-//                bannerView.isHidden = true
                 view.presentScene(scene)
                 
-//                self.bannerView.adUnitID = "ca-app-pub-4899697066667270/1539318048"
-//                self.bannerView.rootViewController = self
-//                self.bannerView.tag = 100
-//                self.bannerView.load(GADRequest())
-//                self.bannerView.isHidden = true
+
             }
             
             
